@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>AddVisits</members>
+        <members>CustomLookupComponent</members>
+        <members>CustomLookupResultComponent</members>
+        <members>selectLookupObjectRecordEvent</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>VisitPlanningController</members>
+        <members>TestLoggerClass</members>
+        <members>Logger</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Log_Entry__c-Log Entry Layout</members>
+        <members>Visit_Plan__c-Visit Plan Layout</members>
+        <members>Visit_Report__c-Visit Report Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Log_Entry__c</members>
+        <members>Visit_Plan__c</members>
+        <members>Visit_Planning_Settings__c</members>
+        <members>Visit_Report__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Log_Entry__c</members>
+        <members>Visit_Report__c</members>
+        <members>Visit_Planning</members>
+        <members>Visit_Plan__c</members>
+        <members>Add_Visits_Mobile_View</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Visit_Planning</members>
+        <name>CustomApplication</name>
+    </types>
+    <version>38.0</version>
+</Package>
