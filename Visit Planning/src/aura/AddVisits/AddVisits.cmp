@@ -1,0 +1,29 @@
+<aura:component controller="VisitPlanningController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="ObjectOptions" type="List" />
+    <aura:attribute name="selectedValue" type="String" />
+    <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+    <lightning:card  title="Plan Your Visits" iconName="standard:today">
+        <aura:set attribute="actions">
+              <lightning:button label="View Planned Visits"  onclick="{!c.viewPlannedVisits }"/>
+        </aura:set>
+        
+        <p class="slds-p-horizontal_small">
+            <lightning:input type="date" aura:id="idVisitDate" name="date" label="Select Date" required="true"/>
+            
+            <lightning:select name="objectSelect" label="Select Object" aura:id="idSelectObjectDropdown" value="{!v.selectedValue}">
+                <aura:iteration items="{!v.ObjectOptions}" var="item">
+                    <option text="{!item.label}" value="{!item.value}"	/>
+                </aura:iteration>
+            </lightning:select>
+            
+            <c:CustomLookupComponent objectAPIName="{!v.selectedValue}" IconName="" selectedRecord="{!v.selectedLookUpRecord}" label="Search Records"/>
+        	
+            <lightning:textarea name="reasonForVisit" aura:id="idVisitReason" label="Reason For Visit" value=""/>
+        </p>
+        <aura:set attribute="footer">
+            <lightning:button variant="brand" label="Save &amp; New" title="Save &amp; New" onclick="{!c.saveVisits }"/>
+        </aura:set>
+    </lightning:card>
+    
+</aura:component>
