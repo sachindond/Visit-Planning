@@ -23,6 +23,15 @@
             }
         });
         $A.enqueueAction(action);
+    },
+    showToastMessage : function(message,title,type){
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title":title ,
+            "message": message,
+            "type":type
+        });
+        toastEvent.fire();
     }
     
 })

@@ -144,7 +144,7 @@ public class VisitPlanningController {
         String searchKey = searchKeyWord + '%';
         List < sObject > returnList = new List < sObject > ();
         // Create a Dynamic SOQL Query For Fetch Record List with LIMIT 5   
-        String sQuery =  'select id, Name from ' +ObjectName + ' where Name LIKE: searchKey order by createdDate DESC limit 5';
+        String sQuery =  'select id, Name from ' +ObjectName + ' where Name LIKE: searchKey order by createdDate DESC limit 10';
         List < sObject > lstOfRecords = Database.query(sQuery);
         for (sObject obj: lstOfRecords) {
             returnList.add(obj);
@@ -154,7 +154,7 @@ public class VisitPlanningController {
     // Method to save Visit Planning Record
     // Logic : We used here dynamic method of apex to set value to the field : objectInstance.put('APINAME',Value)
     @AuraEnabled
-    public static void saveVisitPlanningRecord(string objectAPIName,string objectRecordId,string selectedVisitDate,string reasonForVisit ){
+    public static boolean saveVisitPlanningRecord(string objectAPIName,string objectRecordId,string selectedVisitDate,string reasonForVisit ){
         // get the custom setting and create map of API name and Correspoinding lookup field to access it;
         try{
             List<Visit_Plan__c> lstInsertVisitPlanningRecord = new List<Visit_Plan__c>();
@@ -177,24 +177,32 @@ public class VisitPlanningController {
             if(lstInsertVisitPlanningRecord.size()>0){
                 insert lstInsertVisitPlanningRecord;
             }
-        }Catch(Exception ex){
-            System.debug('**Exception Occur Line Number : '+ex.getLineNumber() +'Error Message :'+ex.getMessage());
+            return true;
+        }Catch(Exception oEx){
+            Logger.Log('Error','Line Number: ' + oEx.getLineNumber() + ' Message: ' + oEx.getMessage(), 'VisitPlanningController.saveVisitPlanningRecord', '');    
+            return false;
         }
     }    
     
+   
     
-    
-    
-    
-    
-    
-    
-    
+    /***** Wrapper Classes *******/
     public class SearchItemWrapper{
         @AuraEnabled public Id RecordId{get;set;}
         @AuraEnabled public String RecordName{get;set;}      
     }
+    // Wrapper to hold all visit planning records
+    public class GetAllVisitsWrapper{
+        @AuraEnabled public string recordId{get;set;}
+        @AuraEnabled public date visitDate{get;set;}
+        @AuraEnabled public string lookupRecordId{get;set;}
+        @AuraEnabled public string lookupRecordName{get;set;}
+        @AuraEnabled public string status{get;set;}
+        
+    }
     
+    
+    // Wrapper class used to store custom setting records
     public class CustomSettingWrapper{
         @AuraEnabled public String objectLabel{get;set;}
         @AuraEnabled public String objectAPIName{get;set;}    
