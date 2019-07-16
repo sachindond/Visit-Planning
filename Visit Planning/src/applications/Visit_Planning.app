@@ -6,15 +6,17 @@
     <formFactors>Large</formFactors>
     <label>Visit Planning</label>
     <navType>Standard</navType>
+    <tab>standard-home</tab>
     <tab>standard-Lead</tab>
     <tab>standard-Account</tab>
     <tab>standard-Contact</tab>
-    <tab>Visit_Planning</tab>
-    <tab>Visit_Plan__c</tab>
-    <tab>Visit_Report__c</tab>
     <tab>Add_Visits_Mobile_View</tab>
-    <tab>Test_Other_Visit__c</tab>
+    <tab>View_Map</tab>
+    <tab>View_Planned_Visits</tab>
+    <tab>Visit_Plan__c</tab>
     <tab>Log_Entry__c</tab>
+    <tab>standard-report</tab>
+    <tab>standard-Dashboard</tab>
     <uiType>Lightning</uiType>
     <utilityBar>Visit_Planning_UtilityBar</utilityBar>
 </CustomApplication>

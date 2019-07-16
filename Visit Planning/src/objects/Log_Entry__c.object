@@ -119,6 +119,9 @@
     </listViews>
     <listViews>
         <fullName>All1</fullName>
+        <columns>NAME</columns>
+        <columns>Function__c</columns>
+        <columns>Message__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>

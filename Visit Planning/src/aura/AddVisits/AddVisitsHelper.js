@@ -1,7 +1,7 @@
 ({
     // helper to get list of object from custom setting thru apex controller
     getObjectList : function(component, event, helper) {
-        var action = component.get("c.getObjectListFromCustomSettig");
+        var action = component.get("c.getObjectListFromCustomSetting");
         action.setCallback(this,function(res){
             if(res.getState()==="SUCCESS"){
                 console.log("*** return object list *** ",res.getReturnValue());

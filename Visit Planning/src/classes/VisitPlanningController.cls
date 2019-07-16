@@ -1,127 +1,8 @@
 public class VisitPlanningController {
-    
-    @AuraEnabled
-    public static List<Visit_Plan__c> GetVisitsForToday(){
-        system.debug('Inside Get Visits for Today...');
-        List<Visit_Plan__c> TodaysVisits  = new List<Visit_Plan__c>();
-        TodaysVisits = [SELECT Id, Owner.Name, Name, Visit_Date__c, Visit_To_Lead__r.Name,
-                        Check_In_Date_Time__c, Check_In_Location__c, Check_Out_Date_Time__c, 
-                        Check_Out_Location__c, Visit_To_Account__r.Name, Visit_To_Contact__r.Name
-                        FROM Visit_Plan__c Where Visit_Date__c = TODAY Order By Name];
-        
-        return TodaysVisits;
-    }
-    
-    @AuraEnabled
-    public static List<SearchItemWrapper> GetSearchableRecords(string objectname){
-        try{
-            system.debug('objectname: ' + objectname);
-            List<sObject> RecordList = new List<sObject>();
-            If(objectname == 'Account')
-            {
-                RecordList = [SELECT Id, Name From Account Limit 10];
-            }
-            else if(objectname == 'Lead')
-            {
-                RecordList = [SELECT Id, Name From Lead Limit 10];
-            }
-            else if(objectname == 'Contact')
-            {
-                RecordList = [SELECT Id, Name From Contact Limit 10];
-            }
-            
-            List<SearchItemWrapper> SearchedItemsList = new List<SearchItemWrapper>();
-            If(RecordList.size() > 0)
-            {
-                For(sObject currentRecord: RecordList)
-                {
-                    SearchItemWrapper newItem = new SearchItemWrapper();
-                    newItem.RecordId = currentRecord.Id;
-                    newItem.RecordName = (String)currentRecord.get('Name');
-                    SearchedItemsList.add(newItem);
-                }
-                return SearchedItemsList;
-            }
-            else
-                return null;
-        }
-        catch(Exception oEx)
-        {
-            system.debug('Error Occured in GetSearchableRecords method: ' + oEx.getMessage() + ' Line No: ' + oEx.getLineNumber());
-        }
-        return null;
-    }
-    
-    @AuraEnabled
-    public static List<Visit_Plan__c> SaveNewVisits(List<Visit_Plan__c> selectedVisits, string selecteddate){
-        try{
-            system.debug('Inside SaveNewVisits...');
-            system.debug('selectedVisits List: ' + selectedVisits);
-            
-            List<Visit_Plan__c> newVisitListForUpsert = new List<Visit_Plan__c>();
-            For(Visit_Plan__c currentVisit: selectedVisits)
-            {
-                Visit_Plan__c newVisitPlan = new Visit_Plan__c();
-                newVisitPlan.Id = currentVisit.Id;
-                newVisitPlan.Visit_To_Lead__c = currentVisit.Visit_To_Lead__c;
-                newVisitPlan.Visit_Date__c = currentVisit.Visit_Date__c;
-                newVisitListForUpsert.add(newVisitPlan);
-            }
-            system.debug('newVisitListForUpsert: ' + newVisitListForUpsert);
-            upsert newVisitListForUpsert;
-            return GetVisitsForDate(selecteddate);
-        }
-        catch(Exception oEx)
-        {
-            system.debug('Error Occured in SaveNewVisits method: ' + oEx.getMessage() + ' Line No: ' + oEx.getLineNumber());
-        }
-        return null;
-    }
-    
-    @AuraEnabled
-    public static List<Visit_Plan__c> GetVisitsForDate(string selecteddate){
-        try{
-            system.debug('Inside GetVisitsForDate...');
-            system.debug('selecteddate: ' + selecteddate);
-            List<Visit_Plan__c> visitPlans = [SELECT Id, Owner.Name, Name, Visit_Date__c, Visit_To_Lead__r.Name, Visit_To_Lead__c,
-                                              Check_In_Date_Time__c, Check_In_Location__c, Check_Out_Date_Time__c, 
-                                              Check_Out_Location__c, Visit_To_Account__c, Visit_To_Account__r.Name, Visit_To_Contact__r.Name, Visit_To_Contact__c
-                                              FROM Visit_Plan__c Where Visit_Date__c =: Date.valueOf(selecteddate) Order By Name];
-            
-            system.debug('visitPlans: ' + visitPlans);
-            return visitPlans;
-        }
-        catch(Exception oEx)
-        {
-            system.debug('Error Occured in GetVisitsForDate method: ' + oEx.getMessage() + ' Line No: ' + oEx.getLineNumber());
-        }
-        return null;
-    }
-    
-    @AuraEnabled
-    public static List<Visit_Plan__c> DeleteSingleVisit (string VisitReletedID, string selecteddate){
-        try{
-            system.debug('Inside DeleteSingleVisit method apex...');
-            system.debug('VisitReletedID: ' + VisitReletedID);
-            system.debug('selecteddate: ' + selecteddate);
-            
-            Delete [Select Id From Visit_Plan__c Where Visit_To_Lead__c =: VisitReletedID 
-                    AND Visit_Date__c =: Date.valueOf(selecteddate)];
-            
-            system.debug('Record deleted...');
-            return GetVisitsForDate(selecteddate);            
-        }
-        catch(Exception oEx)
-        {
-            system.debug('Error Occured in DeleteSingleVisit method: ' + oEx.getMessage() + ' Line No: ' + oEx.getLineNumber());
-        }
-        return null;
-    }
-    
     /***************************** New Development Started 24/6/2018 By Sachin Dond *********************/
     // This method access custom setting from which we get object list where user plan to visits
     @AuraEnabled
-    public static List<CustomSettingWrapper> getObjectListFromCustomSettig(){
+    public static List<CustomSettingWrapper> getObjectListFromCustomSetting(){
         // access custom setting;
         List<CustomSettingWrapper> lstOfObjectAPINames = new List<CustomSettingWrapper>();
         List<Visit_Planning_Settings__c> lstOfVisitPlanningCustomSetting = Visit_Planning_Settings__c.getall().values();
@@ -144,7 +25,7 @@ public class VisitPlanningController {
         String searchKey = searchKeyWord + '%';
         List < sObject > returnList = new List < sObject > ();
         // Create a Dynamic SOQL Query For Fetch Record List with LIMIT 5   
-        String sQuery =  'select id, Name from ' +ObjectName + ' where Name LIKE: searchKey order by createdDate DESC limit 10';
+        String sQuery =  'select id, Name from ' +ObjectName + ' where Name LIKE: searchKey order by createdDate DESC limit 5';
         List < sObject > lstOfRecords = Database.query(sQuery);
         for (sObject obj: lstOfRecords) {
             returnList.add(obj);

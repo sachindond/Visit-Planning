@@ -8,13 +8,24 @@
 	saveVisits : function(component, event, helper) {
 		var selectedObjectAPIName = component.get('v.selectedValue');
         var selectedObjectRecord = component.get("v.selectedLookUpRecord");
-        console.log("****selectedLookUpRecord***",selectedObjectRecord.Id);
+        console.log("****selectedLookUpRecord***",selectedObjectRecord);
         var selectedVisitDate = component.find("idVisitDate").get("v.value");
         console.log("selectedVisitDate****",selectedVisitDate);
         var reasonForVisit = component.find("idVisitReason").get("v.value");
-        console.log("***Reason for visit",reasonForVisit);
+        console.log("***reasonForVisit",reasonForVisit);
         
         // save visit record
+        if(typeof(selectedObjectRecord.Id)=='undefined'){
+             helper.showToastMessage('Incomplete Information! Please make sure to select whom do you want to visit (Visit To).','Error!','error');
+            return false;
+        }
+        if(reasonForVisit==''){
+            console.log("****reasonForVisit null");
+            var visitsTextBox = component.find("idVisitReason");
+            visitsTextBox.set("v.errors", [{message:"Please add reason for visit."}]);
+            return false;
+        }
+        
         var action = component.get("c.saveVisitPlanningRecord");
         action.setParams({'objectAPIName':selectedObjectAPIName,
                           'objectRecordId':selectedObjectRecord.Id,
@@ -27,10 +38,10 @@
                 console.log("***Return After Save ***",returnResponse);
                 if(returnResponse == true){
                     // call helper to show toast message
-                    helper.showToastMessage('Visit Plan Added Successfully!','Success!','success');
+                    helper.showToastMessage('Visit plan added successfully!','Success!','success');
                      $A.get('e.force:refreshView').fire();
                 }else{
-                    helper.showToastMessage('Visit Plan Failed To Insert Please Contact Your Admin!','Error!','error');
+                    helper.showToastMessage('Something went wrong! Please contact your administrator.','Error!','error');
                 }
             }
         });
@@ -53,7 +64,7 @@
                 "componentName": "c__ViewPlannedVisits"
             }, 
             "state": {
-                'message':'This is the target page'
+                'message':'Navigating to visit plan view.'
             }
         };
         navService.navigate(pageReference);

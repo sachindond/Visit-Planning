@@ -10,6 +10,8 @@ public class ViewPlannedVisitController {
         @AuraEnabled public string lookupRecordId{get;set;}
         @AuraEnabled public string lookupRecordName{get;set;}
         @AuraEnabled public string status{get;set;}
+        @AuraEnabled public string reasonForVisit{get;set;}
+        @AuraEnabled public string checkoutComment{get;set;}
     }
     // Method to get list of visit Planning 
     // Logic: Get the values from custom settings and prepare dynamic query.
@@ -24,7 +26,7 @@ public class ViewPlannedVisitController {
             // get the custom setting values
             List<Visit_Planning_Settings__c> lstOfVisitPlanningCustomSetting = Visit_Planning_Settings__c.getall().values();
             // Prepare base query and append lookup field values 
-            string strBaseQuery = 'select id,Visit_Date__c,Name,Status__c';
+            string strBaseQuery = 'select id,Visit_Date__c,Name,Status__c,Reason_For_Visit__c,Check_Out_Comments__c';
             string strLookupFields = '';
             string strLookupFieldRecordName = '';
             if(lstOfVisitPlanningCustomSetting.size()>0){
@@ -39,8 +41,8 @@ public class ViewPlannedVisitController {
                 
                 // prepare complete query and use database.query to execute it.
                 // we use replace here to get name of correspoing lookup record
-                
-                string strCompleteQuery = strBaseQuery+strLookupFields+strLookupFieldRecordName+' '+'from Visit_Plan__c where Visit_Date__c ='+dateVar+' Order by Name';
+                string loggedInUserId = UserInfo.getUserId();
+                string strCompleteQuery = strBaseQuery+strLookupFields+strLookupFieldRecordName+' '+' from Visit_Plan__c where Visit_Date__c ='+dateVar+' '+'and OwnerId=\''+loggedInUserId+'\'Order by Name';
                 system.debug('**Complete QueryString ***'+strCompleteQuery);
                 List<Visit_Plan__c> lstOfVisitPlan = database.query(strCompleteQuery);
                 system.debug('****list of visist plans *** '+lstOfVisitPlan);
@@ -51,8 +53,10 @@ public class ViewPlannedVisitController {
                         visitsWrapperObj.recordId = vp.Id;
                         visitsWrapperObj.visitRecordName = vp.Name;
                         visitsWrapperObj.visitDate = vp.Visit_Date__c;
+                        visitsWrapperObj.reasonForVisit = vp.Reason_For_Visit__c;
+                        visitsWrapperObj.checkoutComment = vp.Check_Out_Comments__c;
                         // dynamic logic to get values and name of lookup fields using custom setting
-                        // Need review of VINIT
+                        // Need review of VINIT: Looks Perfect!
                         for(string s : lstOfLookupFields){
                             if((string)vp.get(s)!=null){
                                 visitsWrapperObj.lookupRecordId =(string)vp.get(s);
@@ -94,7 +98,10 @@ sObject get method throws an error so solution below method
     // Method to update Visit Plan Record on CheckOut button clicked
     // with Comments and Check out location lat long
     @AuraEnabled
-    public static boolean updateCheckoutLocationOnVisitPlanningRecord(string checkoutComments, string recordId, decimal checkoutLat, decimal checkoutLong){
+    public static boolean updateCheckoutLocationOnVisitPlanningRecord(string checkoutComments, 
+                                                                      string recordId, 
+                                                                      decimal checkoutLat, 
+                                                                      decimal checkoutLong){
         List<Visit_Plan__c> lstUpdateVisitPlan = new List<Visit_Plan__c>();
         try{
             // check record id and comment fields are not blank
@@ -143,6 +150,7 @@ sObject get method throws an error so solution below method
     // Method to delete Visit Planning Record
     @AuraEnabled
     public static boolean deleteVisitPlanningRecord(string recordId){
+        system.debug('*** delete Visit Plan ID ** '+recordId);
         try{
             if(string.isNotEmpty(recordId)){
                 delete [select id from Visit_Plan__c where id=:recordId];
