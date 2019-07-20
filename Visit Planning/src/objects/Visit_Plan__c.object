@@ -230,6 +230,7 @@
         <columns>Visit_To_Contact__c</columns>
         <columns>Reason_For_Visit__c</columns>
         <columns>Status__c</columns>
+        <columns>OWNER.FIRST_NAME</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>

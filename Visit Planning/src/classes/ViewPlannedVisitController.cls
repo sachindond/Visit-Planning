@@ -33,9 +33,7 @@ public class ViewPlannedVisitController {
                 for(Visit_Planning_Settings__c vpSettings:lstOfVisitPlanningCustomSetting){
                     strLookupFields += ','+ vpSettings.Lookup_Field_Name__c; 
                     lstOfLookupFields.add(vpSettings.Lookup_Field_Name__c);
-                    
                 }
-                
                 if(string.isNotBlank(strLookupFields))
                     strLookupFieldRecordName = strLookupFields.replace('__c','__r.Name');
                 
@@ -161,4 +159,47 @@ sObject get method throws an error so solution below method
             return false;
         }
     }
+     // Method to clone visit plan record 
+    // this method used in CloneVisitPlans : Lightning component
+    @AuraEnabled
+    public static boolean cloneVisitPlanRecords(string sourceVisitPlanDate, string cloneVisitPlanDate){
+        system.debug('*** sourceVisitPlanDate ***'+sourceVisitPlanDate+'***cloneVisitPlanDate'+cloneVisitPlanDate);
+        try{
+            // get custom setting and prepare query 
+            List<Visit_Planning_Settings__c> lstOfVisitPlanningCustomSetting = Visit_Planning_Settings__c.getall().values();
+            string strBaseQuery = 'select id,Visit_Date__c,Name,Status__c,Check_Out_Date_Time__c,Check_Out_Location__c,Check_In_Location__c,Reason_For_Visit__c,Check_Out_Comments__c,Check_In_Date_Time__c';
+            string strLookupFields='';
+            for(Visit_Planning_Settings__c vpSettings : lstOfVisitPlanningCustomSetting){
+                strLookupFields += ','+ vpSettings.Lookup_Field_Name__c; 
+            }
+            string completeQuery = strBaseQuery+strLookupFields+' '+' from Visit_Plan__c where Visit_Date__c ='+sourceVisitPlanDate;
+            system.debug('***complete query'+completeQuery);
+            List<Visit_Plan__c> lstOfVisitPlans = database.query(completeQuery);
+            system.debug('*** list of visit plan records ***'+lstOfVisitPlans);
+            List<Visit_Plan__c> insertListOfClonedVisitPlans = new List<Visit_Plan__c>(); 
+            if(lstOfVisitPlans.size()>0){
+                for(Visit_Plan__c vp : lstOfVisitPlans){
+                	Visit_Plan__c clonedVisitPlanRecords = vp.clone();
+                    clonedVisitPlanRecords.Check_In_Date_Time__c = null;
+                    clonedVisitPlanRecords.Check_In_Location__Latitude__s = null;
+                    clonedVisitPlanRecords.Check_In_Location__Longitude__s = null;
+                    clonedVisitPlanRecords.Reason_For_Visit__c = null;
+                    clonedVisitPlanRecords.Check_Out_Comments__c = null;
+                    clonedVisitPlanRecords.Check_Out_Date_Time__c = null;
+                    clonedVisitPlanRecords.Check_Out_Location__Latitude__s = null;
+                    clonedVisitPlanRecords.Check_Out_Location__Longitude__s = null;
+                    clonedVisitPlanRecords.Visit_Date__c = date.valueOf(cloneVisitPlanDate);
+                    insertListOfClonedVisitPlans.add(clonedVisitPlanRecords);
+                }
+                if(insertListOfClonedVisitPlans.size() > 0){
+                    insert insertListOfClonedVisitPlans;
+                }
+            }
+            return true;
+        }catch(Exception oEx){
+            Logger.Log('Error','Line Number: ' + oEx.getLineNumber() + ' Message: ' + oEx.getMessage(), 'ViewPlannedVisitController.cloneVisitPlanRecords', '');    
+            return false;
+        }
+    }
+    
 }

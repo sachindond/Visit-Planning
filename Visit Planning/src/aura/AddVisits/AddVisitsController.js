@@ -39,7 +39,8 @@
                 if(returnResponse == true){
                     // call helper to show toast message
                     helper.showToastMessage('Visit plan added successfully!','Success!','success');
-                     $A.get('e.force:refreshView').fire();
+                    var reasonForVisit = component.find("idVisitReason").set("v.value","");
+                    component.set("v.selectedLookUpRecord",{});
                 }else{
                     helper.showToastMessage('Something went wrong! Please contact your administrator.','Error!','error');
                 }
