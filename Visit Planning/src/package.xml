@@ -19,7 +19,12 @@
     <types>
         <members>ViewPlannedVisitController</members>
         <members>VisitPlanningController</members>
+        <members>ShowVisitOnMapController</members>
+        <members>VisitPlanningTestDataHandler</members>
+        <members>TestShowVisitOnMapController</members>
         <members>TestLoggerClass</members>
+        <members>TestVisitPlanningController</members>
+        <members>TestViewPlannedVisitController</members>
         <members>Logger</members>
         <name>ApexClass</name>
     </types>

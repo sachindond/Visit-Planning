@@ -20,9 +20,30 @@
             </div>
         </div>
     </div>
-    <lightning:input type="date" aura:id="idVisitDateOnMap" dateStyle="short" value="{!v.selectedDate}" 
-                     name="date" label="Select Date" 
-                     required="true" format="DD-MM-YYYY" onchange="{!c.onChangeDateFilterOfMap}"/>
+    
+    <div class="c-container" style="padding-bottom:1%;">
+        <lightning:layout >
+            <lightning:layoutItem flexibility="auto"  >
+                <lightning:buttonIcon  variant="container" iconName="utility:left" size="large"
+                                      class="previousDateButton" alternativeText="Previous Date"
+                                      onclick="{!c.onClickPreviousDateButton}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" >
+                <label class="slds-form-element__label topMarginDateInput">Select Date</label>
+                <ui:inputDate aura:id="idVisitDateOnMap" value="{!v.selectedDate}" 
+                              displayDatePicker="true" format="{!$Locale.dateFormat}" class=""
+                              change="{!c.onChangeDateFilterOfMap}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" >
+                <lightning:buttonIcon  variant="container" iconName="utility:right" 
+                                      class="nextDateButton" alternativeText="Next Date"
+                                      onclick="{!c.onClickNextDateButton}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    
+    
+    
     <ui:inputSelect aura:id="idSubordinate" label="Select Subordinate" change="{!c.onChangeSubordinateList}">
         <aura:iteration items="{!v.subordinateList}" var="sb">
             <ui:inputSelectOption text="{!sb.value}" label="{!sb.label}"/>

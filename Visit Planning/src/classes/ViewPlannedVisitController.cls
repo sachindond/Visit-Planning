@@ -12,6 +12,7 @@ public class ViewPlannedVisitController {
         @AuraEnabled public string status{get;set;}
         @AuraEnabled public string reasonForVisit{get;set;}
         @AuraEnabled public string checkoutComment{get;set;}
+        @AuraEnabled public string objectType{get;set;}
     }
     // Method to get list of visit Planning 
     // Logic: Get the values from custom settings and prepare dynamic query.
@@ -29,10 +30,12 @@ public class ViewPlannedVisitController {
             string strBaseQuery = 'select id,Visit_Date__c,Name,Status__c,Reason_For_Visit__c,Check_Out_Comments__c';
             string strLookupFields = '';
             string strLookupFieldRecordName = '';
+            map<string,string>  mapOfLookupApiWithObjLabel = new map<string,string>();
             if(lstOfVisitPlanningCustomSetting.size()>0){
                 for(Visit_Planning_Settings__c vpSettings:lstOfVisitPlanningCustomSetting){
                     strLookupFields += ','+ vpSettings.Lookup_Field_Name__c; 
                     lstOfLookupFields.add(vpSettings.Lookup_Field_Name__c);
+                    mapOfLookupApiWithObjLabel.put(vpSettings.Lookup_Field_Name__c,vpSettings.Object_Label__c);
                 }
                 if(string.isNotBlank(strLookupFields))
                     strLookupFieldRecordName = strLookupFields.replace('__c','__r.Name');
@@ -56,8 +59,10 @@ public class ViewPlannedVisitController {
                         // dynamic logic to get values and name of lookup fields using custom setting
                         // Need review of VINIT: Looks Perfect!
                         for(string s : lstOfLookupFields){
+                            system.debug('****string lookup'+s);
                             if((string)vp.get(s)!=null){
                                 visitsWrapperObj.lookupRecordId =(string)vp.get(s);
+                                visitsWrapperObj.objectType = mapOfLookupApiWithObjLabel.get(s);
                                 // we used below method to get related field values for Lookup's,
                                 // as salesforce throws an error if we used get(Lookup__r.Name) so to overcome this error 
                                 // we used this helper method
@@ -77,9 +82,9 @@ public class ViewPlannedVisitController {
         }
     }
     /* This is method used to get values from related fields
-Logic: if we want to access any lookup field such ass lookup__r.Name in that case,
-sObject get method throws an error so solution below method  
-*/	
+		Logic: if we want to access any lookup field such ass lookup__r.Name in that case,
+		sObject get method throws an error so solution below method  
+        */	
     public static Object getFieldValue(SObject o,String field){
         if(o == null){
             return null;
@@ -200,6 +205,16 @@ sObject get method throws an error so solution below method
             Logger.Log('Error','Line Number: ' + oEx.getLineNumber() + ' Message: ' + oEx.getMessage(), 'ViewPlannedVisitController.cloneVisitPlanRecords', '');    
             return false;
         }
+    }
+    //Method to generate random string used in test classes for user creation
+    public static String generateRandomString(Integer len) {
+        final String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
+        String randStr = '';
+        while (randStr.length() < len) {
+            Integer idx = Math.mod(Math.abs(Crypto.getRandomInteger()), chars.length());
+            randStr += chars.substring(idx, idx+1);
+        }
+        return randStr; 
     }
     
 }

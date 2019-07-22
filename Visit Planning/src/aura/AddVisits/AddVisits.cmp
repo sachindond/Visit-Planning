@@ -11,8 +11,27 @@
         </aura:set>
         
         <p class="slds-p-horizontal_small">
-            <ui:inputDate aura:id="idVisitDate" label="Select Date" value="{!v.selectedDate}" 
-                          displayDatePicker="true" format="dd/MM/yyyy"/>
+            <div class="c-container" >
+                <lightning:layout >
+                    <lightning:layoutItem flexibility="auto"  >
+                        <lightning:buttonIcon  variant="container" iconName="utility:left" 
+                                              size="large"
+                                              class="previousDateButton" alternativeText="Previous Date"
+                                              onclick="{!c.onClickPreviousDateButton}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto" >
+                        
+                         <ui:inputDate aura:id="idVisitDate" label="Select Date" value="{!v.selectedDate}" 
+                          displayDatePicker="true" format="{!$Locale.dateFormat}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto" >
+                        <lightning:buttonIcon  variant="container" iconName="utility:right" 
+                                              class="nextDateButton" alternativeText="Next Date"
+                                              onclick="{!c.onClickNextDateButton}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </div>
+           
             <lightning:select name="objectSelect" label="Select Object" 
                               aura:id="idSelectObjectDropdown" value="{!v.selectedValue}">
                 <aura:iteration items="{!v.ObjectOptions}" var="item">
@@ -29,5 +48,5 @@
             <lightning:button  label="Clear" title="Clear" onclick="{!c.clearData }"/>
         </aura:set>
     </lightning:card>
-     
+    
 </aura:component>

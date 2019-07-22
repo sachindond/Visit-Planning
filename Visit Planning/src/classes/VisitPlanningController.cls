@@ -3,27 +3,34 @@ public class VisitPlanningController {
     // This method access custom setting from which we get object list where user plan to visits
     @AuraEnabled
     public static List<CustomSettingWrapper> getObjectListFromCustomSetting(){
+         List<CustomSettingWrapper> lstOfObjectAPINames = new List<CustomSettingWrapper>();
         // access custom setting;
-        List<CustomSettingWrapper> lstOfObjectAPINames = new List<CustomSettingWrapper>();
-        List<Visit_Planning_Settings__c> lstOfVisitPlanningCustomSetting = Visit_Planning_Settings__c.getall().values();
-        if(lstOfVisitPlanningCustomSetting.size()>0){
-            for(Visit_Planning_Settings__c vpObj : lstOfVisitPlanningCustomSetting){
-                // create map of Object label and Object API key
-                CustomSettingWrapper wrapperObj = new CustomSettingWrapper();
-                wrapperObj.objectLabel = vpObj.Object_Label__c;
-                wrapperObj.objectAPIName =  vpObj.Object_API_Name__c;
-                lstOfObjectAPINames.add(wrapperObj);
+        try{
+           
+            List<Visit_Planning_Settings__c> lstOfVisitPlanningCustomSetting = Visit_Planning_Settings__c.getall().values();
+            if(lstOfVisitPlanningCustomSetting.size()>0){
+                for(Visit_Planning_Settings__c vpObj : lstOfVisitPlanningCustomSetting){
+                    // create map of Object label and Object API key
+                    CustomSettingWrapper wrapperObj = new CustomSettingWrapper();
+                    wrapperObj.objectLabel = vpObj.Object_Label__c;
+                    wrapperObj.objectAPIName =  vpObj.Object_API_Name__c;
+                    lstOfObjectAPINames.add(wrapperObj);
+                }
             }
+            system.debug('**list of Objects and API keys'+lstOfObjectAPINames);
+            return lstOfObjectAPINames;
+        }Catch(Exception oEx){
+            Logger.Log('Error','Line Number: ' + oEx.getLineNumber() + ' Message: ' + oEx.getMessage(), 'VisitPlanningController.getObjectListFromCustomSetting', '');    
+            return lstOfObjectAPINames;
         }
-        system.debug('**list of Objects and API keys'+lstOfObjectAPINames);
-        return lstOfObjectAPINames;
     }
     // This is method used fetch lookup values based on Object Name 
     @AuraEnabled
     public static List<sObject> getObjectRecordsSearchResults(String searchKeyWord, String ObjectName) {
+        List < sObject > returnList = new List < sObject > ();
+        try{
         system.debug('ObjectName-->' + ObjectName);
         String searchKey = searchKeyWord + '%';
-        List < sObject > returnList = new List < sObject > ();
         // Create a Dynamic SOQL Query For Fetch Record List with LIMIT 5   
         String sQuery =  'select id, Name from ' +ObjectName + ' where Name LIKE: searchKey order by createdDate DESC limit 5';
         List < sObject > lstOfRecords = Database.query(sQuery);
@@ -31,6 +38,10 @@ public class VisitPlanningController {
             returnList.add(obj);
         }
         return returnList;
+        }Catch(Exception oEx){
+            Logger.Log('Error','Line Number: ' + oEx.getLineNumber() + ' Message: ' + oEx.getMessage(), 'VisitPlanningController.getObjectRecordsSearchResults', '');    
+            return returnList;
+        }
     }
     // Method to save Visit Planning Record
     // Logic : We used here dynamic method of apex to set value to the field : objectInstance.put('APINAME',Value)
@@ -64,25 +75,6 @@ public class VisitPlanningController {
             return false;
         }
     }    
-    
-   
-    
-    /***** Wrapper Classes *******/
-    public class SearchItemWrapper{
-        @AuraEnabled public Id RecordId{get;set;}
-        @AuraEnabled public String RecordName{get;set;}      
-    }
-    // Wrapper to hold all visit planning records
-    public class GetAllVisitsWrapper{
-        @AuraEnabled public string recordId{get;set;}
-        @AuraEnabled public date visitDate{get;set;}
-        @AuraEnabled public string lookupRecordId{get;set;}
-        @AuraEnabled public string lookupRecordName{get;set;}
-        @AuraEnabled public string status{get;set;}
-        
-    }
-    
-    
     // Wrapper class used to store custom setting records
     public class CustomSettingWrapper{
         @AuraEnabled public String objectLabel{get;set;}
