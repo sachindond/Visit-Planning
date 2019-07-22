@@ -93,11 +93,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Visit_Plan__c.Test_Other_Visit__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>Visit_Plan__c.Visit_To_Account__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -129,9 +124,9 @@
     <hasActivationRequired>false</hasActivationRequired>
     <label>Visit Planning Permission Set</label>
     <objectPermissions>
-        <allowCreate>true</allowCreate>
-        <allowDelete>true</allowDelete>
-        <allowEdit>true</allowEdit>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>Log_Entry__c</object>
@@ -148,10 +143,14 @@
     </objectPermissions>
     <tabSettings>
         <tab>Add_Visits</tab>
-        <visibility>None</visibility>
+        <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
         <tab>Log_Entry__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>View_Map</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>

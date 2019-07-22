@@ -43,6 +43,7 @@
         <members>Visit_Planning_Settings__c</members>
         <members>Visit_Plan__c</members>
         <members>Visit_Report__c</members>
+       
         <name>CustomObject</name>
     </types>
     <types>
@@ -54,7 +55,22 @@
         <members>Visit_Plan__c</members>
         <members>Visit_Report__c</members>
         <members>Add_Visits</members>
+         <members>View_Map</members>
         <name>CustomTab</name>
+    </types>
+    
+    <types>
+        <members>Visit_Planning_Reports/All_Visits_SNM</members>
+        <members>Visit_Planning_Reports/Contact_Wise_Statuses_olt</members>
+        <members>Visit_Planning_Reports/Checked_In_Visits_4xv</members>
+        <members>Visit_Planning_Reports/User_wise_Visits_Fex</members>
+        <members>Visit_Planning_Reports/Missed_Visits_INZ</members>
+        
+        <members>Visit_Planning_Reports/Account_Wise_Visits_9bo</members>
+        <members>Visit_Planning_Reports/Lead_Wise_Visits_o7p</members>
+        <members>Visit_Planning_Reports/Planned_Visits_PDH</members>
+         <members>Visit_Planning_Reports/Checked_Out_Visits_p2z</members>
+        <name>Report</name>
     </types>
     <version>38.0</version>
 </Package>

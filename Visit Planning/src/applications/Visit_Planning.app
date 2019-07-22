@@ -11,8 +11,8 @@
     <tab>standard-Account</tab>
     <tab>standard-Contact</tab>
     <tab>Add_Visits</tab>
-    <tab>View_Map</tab>
     <tab>View_Planned_Visits</tab>
+    <tab>View_Map</tab>
     <tab>Visit_Plan__c</tab>
     <tab>Log_Entry__c</tab>
     <tab>standard-report</tab>

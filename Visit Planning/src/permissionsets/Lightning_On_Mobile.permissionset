@@ -93,11 +93,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Visit_Plan__c.Test_Other_Visit__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Visit_Plan__c.Visit_To_Account__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -134,6 +129,10 @@
     </tabSettings>
     <tabSettings>
         <tab>Log_Entry__c</tab>
+        <visibility>None</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>View_Map</tab>
         <visibility>None</visibility>
     </tabSettings>
     <tabSettings>
