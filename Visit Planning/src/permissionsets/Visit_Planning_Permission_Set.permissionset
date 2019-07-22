@@ -147,7 +147,7 @@
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <tabSettings>
-        <tab>Add_Visits_Mobile_View</tab>
+        <tab>Add_Visits</tab>
         <visibility>None</visibility>
     </tabSettings>
     <tabSettings>

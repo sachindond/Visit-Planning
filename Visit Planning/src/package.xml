@@ -53,7 +53,7 @@
         <members>Log_Entry__c</members>
         <members>Visit_Plan__c</members>
         <members>Visit_Report__c</members>
-        <members>Add_Visits_Mobile_View</members>
+        <members>Add_Visits</members>
         <name>CustomTab</name>
     </types>
     <version>38.0</version>
